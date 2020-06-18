@@ -12,7 +12,7 @@ const [provider, setProvider] = useState('')
 const [number, setNumber] = useState('')
 const [amount, setAmount] = useState('')
 const [fullData, setFulldata] = useState([])
-const [succes, setSucces] = useState(false)
+const [success, setSucces] = useState(false)
 const [error, setError] = useState(false)
 const [isOpen, setIsOpen] = useState(false)
 
@@ -82,9 +82,11 @@ const onSendAirtime = () => {
   .then((res) => {
     const { data } = res;
     console.log(res)
+    setSucces(true)
   })
   .catch((err) => {
     console.log(err)
+    setError(true)
   })
 }
  
@@ -130,28 +132,26 @@ const onSendAirtime = () => {
 
       
     {fullData.map(({name, number, provider, amount}) => (
-      <div className='table'>
- <div className='sub-table'>
-    <p>{name}</p>
-    <p>{number}</p>
-    <p>Frontend</p>
- <button className='btn button' onClick={onSendAirtime}>Send</button>
- <button className='btn button' onClick={openModal}>Edit Intern</button>
- </div>
- <hr/>
- </div>
-))}
-        
-
-
-
-
-
-
-
-
+      <div className='row'>
+        <div classname='col-md-3'>
+          <p>{name}</p>
+        </div>
+        <div classname='col-md-3'>
+          <p>{number}</p>
+        </div>
+        <div classname='col-md-3'>
+          <p>Frontend</p>
+        </div>
+        <div className='col-md-3'>
+          <button className='btn button' onClick={openModal}>Edit Intern</button>
+        </div>
+      </div>
+      <hr/>
+      ))}
     </div>
   );
 }
 
 export default App;
+
+// <button className='btn button' onClick={onSendAirtime}>Send</button>
