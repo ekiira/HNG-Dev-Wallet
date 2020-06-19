@@ -105,7 +105,17 @@ const App = () => {
       });
   };
 
-  const onSendBulk = () => {
+  const onSendBulk = (b, c, d) => {
+     // data required for the wallet api
+      const data2 = {
+        Code: c,
+        Amount: d.toLowerCase(),
+        PhoneNumber: b,
+        SecretKey: secret,
+    };
+    const data = JSON.stringify(data2);
+    const bearer = `Bearer ${publics}`;
+      console.log('data', data2, bearer)
     for (let i = 0; i < checks.length; i+=1) {
       axios.post('https://api.wallets.africa/bills/airtime/purchase', data[i], {
         headers: {
@@ -169,7 +179,7 @@ const App = () => {
         <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={openModal}>Add Intern</button>
         <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={onDelete}>Remove Interns</button>
         <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={onDeleteAll}>Remove All</button>
-        <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={onSendBulk}>Send Bulk</button>
+        <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={onSendBulk(number, provider, amount)}>Send Bulk</button>
 
       </div>
       <Modal
