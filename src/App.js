@@ -41,7 +41,7 @@ const App = () => {
     Code: provider,
     Amount: amount.toLowerCase(),
     PhoneNumber: number,
-    SecretKey: '',
+    SecretKey: secret,
   };
 
   const openModal = () => {
@@ -59,7 +59,7 @@ const App = () => {
   };
 
   const data = JSON.stringify(data2);
-  const bearer = 'Bearer ';
+  const bearer = `Bearer ${publics}`;
 
   // add intern / sent intern airtime
   const onFormSubmit = () => { 
