@@ -61,32 +61,15 @@ const App = () => {
   const bearer = 'Bearer ';
 
   // add intern / sent intern airtime
-  const onFormSubmit =  () => {
-    alert('yes')
-     axios.post('https://hng-airtime-dev-server.herokuapp.com/addIntern', data1)
+  const onFormSubmit = () => { 
+   axios.post('https://hng-airtime-dev-server.herokuapp.com/addIntern', data1)
       .then((res) => {
         console.log(res, 'yes');
+         
       })
       .catch((err) => {
         console.log(err,'no');
       });
-
-//     axios.post('https://sandbox.wallets.africa/bills/airtime/purchase', data, {
-//       headers: {
-//         mode: 'no-cors',
-//         Authorization: bearer,
-//         'Content-Type': 'application/json',
-//       },
-//     })
-//       .then((res) => {
-//         const { data } = res;
-//         console.log(res);
-//         setSucces(true);
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//         setError(true);
-//       });
   };
 
   // get interns
@@ -100,7 +83,7 @@ const App = () => {
       .catch((err) => {
         console.log('err', err);
       });
-  }, []);
+  }, [fullData]);
 
   const onSendAirtime = () => {
     axios.post('https://sandbox.wallets.africa/bills/airtime/purchase', data, {
@@ -181,10 +164,10 @@ const App = () => {
 
       <div id="button">
 
-        <button type="button" className="btn button my-5 mx-3" onClick={openModal}>Add Intern</button>
-        <button type="button" className="btn button my-5 mx-3" onClick={onDelete}>Remove Interns</button>
-        <button type="button" className="btn button my-5 mx-3" onClick={onDeleteAll}>Remove All</button>
-        <button type="button" className="btn button my-5 mx-3" onClick={onSendBulk}>Send Bulk</button>
+        <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={openModal}>Add Intern</button>
+        <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={onDelete}>Remove Interns</button>
+        <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={onDeleteAll}>Remove All</button>
+        <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={onSendBulk}>Send Bulk</button>
 
       </div>
       <Modal
@@ -210,7 +193,7 @@ const App = () => {
           <div className="form-group">
             <input type="text" className="form-control" value={amount} onChange={(e) => onChangeHandler(e, setAmount)} placeholder="Amount" />
           </div>
-          <button type="button" onClick={onFormSubmit} className="btn btn-block button text-center">Send</button>
+          <button type="button" onClick={onFormSubmit} className="btn btn-block button text-center">Save</button>
         </form>
 
         <button type="button" onClick={closeModal} className="btn btn-block button text-center my-3">Close</button>
@@ -235,7 +218,7 @@ const App = () => {
               <p>Frontend</p>
             </div>
             <div className="col-3">
-              <button type="button" className="btn button" onClick={openModal}>Send Airtime</button>
+              <button type="button" className="btn button" onClick={onSendAirtime}>Send Airtime</button>
             </div>
           </div>
           <hr />
