@@ -36,14 +36,6 @@ const App = () => {
     track,
   };
 
-  // data required for the wallet api
-  const data2 = {
-    Code: provider,
-    Amount: amount.toLowerCase(),
-    PhoneNumber: number,
-    SecretKey: secret,
-  };
-
   const openModal = () => {
     setIsOpen(true);
     setFulldata(fullData);
@@ -58,9 +50,7 @@ const App = () => {
     handler(value);
   };
 
-  const data = JSON.stringify(data2);
-  const bearer = `Bearer ${publics}`;
-
+  
   // add intern / sent intern airtime
   const onFormSubmit = () => { 
    axios.post('https://hng-airtime-dev-server.herokuapp.com/addIntern', data1)
@@ -86,7 +76,17 @@ const App = () => {
       });
   }, [fullData]);
 
-  const onSendAirtime = () => {
+  const onSendAirtime = (b, c, d) => {
+    // data required for the wallet api
+      const data2 = {
+        Code: c,
+        Amount: d.toLowerCase(),
+        PhoneNumber: b,
+        SecretKey: secret,
+    };
+    const data = JSON.stringify(data2);
+    const bearer = `Bearer ${publics}`;
+      console.log('data', data2, bearer)
     axios.post('https://api.wallets.africa/bills/airtime/purchase', data, {
       headers: {
         mode: 'no-cors',
@@ -220,7 +220,7 @@ const App = () => {
               <p>Frontend</p>
             </div>
             <div className="col-3">
-              <button type="button" className="btn button" onClick={onSendAirtime}>Send Airtime</button>
+              <button type="button" className="btn button" onClick={onSendAirtime(number, provider, amount}>Send Airtime</button>
             </div>
           </div>
           <hr />
