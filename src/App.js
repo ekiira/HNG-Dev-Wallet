@@ -68,30 +68,32 @@ const App = () => {
     axios.get('https://hng-airtime-dev-server.herokuapp.com/interns')
       .then((res) => {
         const { data } = res;
-        setFulldata(data);
-        const sorted = fullData.sort((a, b) => +new Date(a.date) - +new Date(b.date));
+        const sorted = data.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+        setFulldata(sorted);
       })
       .catch((err) => {
         console.log('err', err);
       });
   }, [fullData]);
 
+
   const onSendAirtime = (b, c, d) => {
     // data required for the wallet api
       const data2 = {
-        Code: c,
-        Amount: d.toLowerCase(),
+        Code: c.toLowerCase(),
+        Amount: d,
         PhoneNumber: b,
         SecretKey: secret,
     };
     const data = JSON.stringify(data2);
     const bearer = `Bearer ${publics}`;
-      console.log('data', data2, bearer)
-    axios.post('https://api.wallets.africa/bills/airtime/purchase', data, {
+   axios.post('https://api.wallets.africa/bills/airtime/purchase', data, {
       headers: {
-        mode: 'no-cors',
+        // mode: 'no-cors',
         Authorization: bearer,
         'Content-Type': 'application/json',
+        // "Access-Control-Allow-Origin": "*",
+        "crossorigin":true
       },
     })
       .then((res) => {
@@ -100,41 +102,42 @@ const App = () => {
         setSucces(true);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err)
+        console.log(err.Message);
         setError(true);
       });
-  };
+  }; 
 
-  const onSendBulk = (b, c, d) => {
-     // data required for the wallet api
-      const data2 = {
-        Code: c,
-        Amount: d.toLowerCase(),
-        PhoneNumber: b,
-        SecretKey: secret,
-    };
-    const data = JSON.stringify(data2);
-    const bearer = `Bearer ${publics}`;
-      console.log('data', data2, bearer)
-    for (let i = 0; i < checks.length; i+=1) {
-      axios.post('https://api.wallets.africa/bills/airtime/purchase', data[i], {
-        headers: {
-          mode: 'no-cors',
-          Authorization: bearer,
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((res) => {
-          const { data } = res;
-          console.log(res);
-          setSucces(true);
-        })
-        .catch((err) => {
-          console.log(err);
-          setError(true);
-        });
-    }
-  };
+  // const onSendBulk = (b, c, d) => {
+  //    // data required for the wallet api
+  //     const data2 = {
+  //       Code: c.toLowerCase(),
+  //       Amount: d,
+  //       PhoneNumber: b,
+  //       SecretKey: secret,
+  //   };
+  //   const data = JSON.stringify(data2);
+  //   const bearer = `Bearer ${publics}`;
+  //     console.log('data', data2, bearer)
+  //   for (let i = 0; i < checks.length; i+=1) {
+  //     axios.post('https://api.wallets.africa/bills/airtime/purchase', data[i], {
+  //       headers: {
+  //         mode: 'no-cors',
+  //         Authorization: bearer,
+  //         'Content-Type': 'application/json',
+  //       },
+  //     })
+  //       .then((res) => {
+  //         const { data } = res;
+  //         console.log(res);
+  //         setSucces(true);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //         setError(true);
+  //       });
+  //   }
+  // };
 
   const onDelete = () => {
     for (let i = 0; i < checks.length; i += 1) {
@@ -154,11 +157,9 @@ const App = () => {
       .then((res) => {
         const { data } = res;
         console.log(data);
-        setSucces(true);
       })
       .catch((err) => {
         console.log('err', err);
-        setError(true);
       });
   };
 
@@ -174,12 +175,12 @@ const App = () => {
       <h2 className="pt-5">Purchasing of Airtime Made Easy</h2>
     {success ? <p className='text-center'>You have successfully sent airtime</p> : null}
     {error ? <p className='text-center'>You do not have enough balance for this transaction</p> : null}
-      <div id="button">
+      <div id="button" className='row my-3'>
 
-        <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={openModal}>Add Intern</button>
-        <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={onDelete}>Remove Interns</button>
-        <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={onDeleteAll}>Remove All</button>
-        <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={onSendBulk(number, provider, amount)}>Send Bulk</button>
+        <button type="button" className="btn col-6 col-md-3 button my-2 my-lg-5" onClick={openModal}>Add Intern</button>
+        <button type="button" className="btn col-6 col-md-3 button my-2 my-lg-5" onClick={onDelete}>Remove Interns</button>
+        <button type="button" className="btn col-6 col-md-3 button my-2 my-lg-5" onClick={onDeleteAll}>Remove All</button>
+        <button type="button" className="btn col-6 col-md-3 button my-2 my-lg-5">Send Bulk</button>
 
       </div>
       <Modal
@@ -203,7 +204,7 @@ const App = () => {
             <input type="text" className="form-control" value={number} onChange={(e) => onChangeHandler(e, setNumber)} placeholder="Phone Number" />
           </div>
           <div className="form-group">
-            <input type="text" className="form-control" value={amount} onChange={(e) => onChangeHandler(e, setAmount)} placeholder="Amount" />
+            <input type="text" className="form-control" value={amount} onChange={(e) => onChangeHandler(e, setAmount)} placeholder="Amount in naira" />
           </div>
           <button type="button" onClick={onFormSubmit} className="btn btn-block button text-center">Save</button>
         </form>
@@ -212,30 +213,31 @@ const App = () => {
 
       </Modal>
 
-      {fullData.map(({
-        name, number, provider, amount, _id,
-      }) => (
-        <div key={_id}>
-          <div className="row">
-            <div className="col-1">
-              <input type="checkbox" autoComplete="off" />
-            </div>
-            <div className="col-3">
-              <p>{name}</p>
-            </div>
-            <div className="col-2">
-              <p>{number}</p>
-            </div>
-            <div className="col-3">
-              <p>Frontend</p>
-            </div>
-            <div className="col-3">
-              <button type="button" className="btn button" onClick={onSendAirtime(number, provider, amount)}>Send Airtime</button>
-            </div>
-          </div>
-          <hr />
-        </div>
-      ))}
+
+  <table className="table">
+  <thead>
+    <tr>
+      <th scope="col">Select</th>
+      <th scope="col">Name</th>
+      <th scope="col">Track</th>
+      <th scope="col">Phone No</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+  {fullData.map(({name, number, provider, amount, _id, track}) => (
+    <tr key={_id}>
+    <td><input type="checkbox" autoComplete="off" /></td>
+    <td>{name}</td>
+    <td>{track}</td>
+    <td>{number}</td>
+    <td> <button type="button" className="btn button" onClick={() => onSendAirtime(number, provider, amount)}>Send Airtime</button></td>
+
+    </tr>
+    ))}
+  </tbody>
+</table>
+
     </div>
   );
 };

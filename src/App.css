@@ -52,13 +52,17 @@ button:focus {
   border: none;
   outline: none;
 }
-
+/* 
 .sub-table {
   justify-content: space-around;
   display: flex;
+} */
+
+@media only screen and (max-width: 600px) {
+
+    .App {
+      text-align: center;
+      width: 95%;
+      margin: 0 auto;
+    }
 }
-
-#button {
-
-}
-
