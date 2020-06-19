@@ -61,8 +61,8 @@ const App = () => {
   const bearer = 'Bearer ';
 
   // add intern / sent intern airtime
-  const onFormSubmit = async () => {
-    await axios.post('https://hng-airtime-dev-server.herokuapp.com/addIntern', data1)
+  const onFormSubmit =  () => {
+     axios.post('https://hng-airtime-dev-server.herokuapp.com/addIntern', data1)
       .then((res) => {
         console.log(res, 'yes');
       })
@@ -70,22 +70,22 @@ const App = () => {
         console.log(err,'no');
       });
 
-    await axios.post('https://sandbox.wallets.africa/bills/airtime/purchase', data, {
-      headers: {
-        mode: 'no-cors',
-        Authorization: bearer,
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => {
-        const { data } = res;
-        console.log(res);
-        setSucces(true);
-      })
-      .catch((err) => {
-        console.log(err);
-        setError(true);
-      });
+//     axios.post('https://sandbox.wallets.africa/bills/airtime/purchase', data, {
+//       headers: {
+//         mode: 'no-cors',
+//         Authorization: bearer,
+//         'Content-Type': 'application/json',
+//       },
+//     })
+//       .then((res) => {
+//         const { data } = res;
+//         console.log(res);
+//         setSucces(true);
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//         setError(true);
+//       });
   };
 
   // get interns
