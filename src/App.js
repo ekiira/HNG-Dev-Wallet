@@ -220,7 +220,7 @@ const App = () => {
               <p>Frontend</p>
             </div>
             <div className="col-3">
-              <button type="button" className="btn button" onClick={onSendAirtime(number, provider, amount}>Send Airtime</button>
+              <button type="button" className="btn button" onClick={onSendAirtime(number, provider, amount)}>Send Airtime</button>
             </div>
           </div>
           <hr />
