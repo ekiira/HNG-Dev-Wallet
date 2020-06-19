@@ -86,7 +86,7 @@ const App = () => {
   }, [fullData]);
 
   const onSendAirtime = () => {
-    axios.post('https://sandbox.wallets.africa/bills/airtime/purchase', data, {
+    axios.post('https://api.wallets.africa/bills/airtime/purchase', data, {
       headers: {
         mode: 'no-cors',
         Authorization: bearer,
@@ -97,16 +97,18 @@ const App = () => {
         const { data } = res;
         console.log(res);
         setSucces(true);
+        alert('Successfully sent airtime'}
       })
       .catch((err) => {
         console.log(err);
         setError(true);
+        alert('Sorry you do not enough balance for this transaction'}
       });
   };
 
   const onSendBulk = () => {
     for (let i = 0; i < checks.length; i+=1) {
-      axios.post('https://sandbox.wallets.africa/bills/airtime/purchase', data[i], {
+      axios.post('https://api.wallets.africa/bills/airtime/purchase', data[i], {
         headers: {
           mode: 'no-cors',
           Authorization: bearer,
@@ -117,10 +119,12 @@ const App = () => {
           const { data } = res;
           console.log(res);
           setSucces(true);
+          alert('Successfully sent airtime'}
         })
         .catch((err) => {
           console.log(err);
           setError(true);
+          alert('Sorry you do not enough balance for this transaction'}
         });
     }
   };
