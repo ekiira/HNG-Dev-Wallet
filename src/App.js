@@ -1,36 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import axios from 'axios'
+import axios from 'axios';
+import dotenv from 'dotenv';
 import './App.css';
 import logs from './hng_logo-min.png'
 
+dotenv.config()
+
+const publics = process.env.REACT_APP_API_PUBLIC_KEY
+const secret = process.env.REACT_APP_API_SECOND_KEY 
 Modal.setAppElement("#root")
 
 const App = () => {
+
+  console.log('keys', secret, publics)
 const [name, setName] = useState('')
 const [provider, setProvider] = useState('')
 const [number, setNumber] = useState('')
 const [amount, setAmount] = useState('')
+const [track, setTrack] = useState('')
 const [fullData, setFulldata] = useState([])
+const [select, onSelect] = useState([])
+const [check, setCheck] = useState(false)
 const [success, setSucces] = useState(false)
 const [error, setError] = useState(false)
 const [isOpen, setIsOpen] = useState(false)
-
+const checks = ''
+const id = ''
+// Data required for the backend
 const data1 = {
   name,
   provider,
   number,
-  amount
+  amount,
+  track
 }
 
-const openModal = () => {
-  setIsOpen(true)
-}
-
-const closeModal = () => {
-  setIsOpen(false)
-}
-
+// data required for the wallet api
 const data2 = {
   Code: provider,
   Amount: amount,
@@ -38,38 +44,70 @@ const data2 = {
   SecretKey: ""
 }
 
-const data = JSON.stringify(data2)
-var bearer = 'Bearer ';
+const openModal = () => {
+  setIsOpen(true)
+  setFulldata(fullData)
+}
+
+const closeModal = () => {
+  setIsOpen(false)
+}
 
 const onChangeHandler = (event, handler) => {
   const { value } = event.target;
   handler(value);
 };
 
-// add intern
-const onFormSubmit = (e) => {
-  e.preventDefault();
-axios.post('http://localhost:4000/addIntern', data1)
+const data = JSON.stringify(data2)
+var bearer = 'Bearer ';
+
+// add intern / sent intern airtime
+const onFormSubmit = async(e) => {
+  // e.preventDefault();
+await axios.post('http://localhost:5000/addIntern', data1)
 .then((res) => {
   console.log(res)
+  // setAmount('')
+  // setName('')
+  // setNumber('')
+  // setTrack('')
+  // setProvider('')
 })
 .catch((err) => {
   console.log(err)
 })
+
+await axios.post('https://sandbox.wallets.africa/bills/airtime/purchase', data, {
+    headers: {
+      mode: 'no-cors',
+      'Authorization': bearer,
+      'Content-Type': 'application/json'
+    }
+  })
+  .then((res) => {
+    const { data } = res;
+    console.log(res)
+    setSucces(true)
+  })
+  .catch((err) => {
+    console.log(err)
+    setError(true)
+  })
+
 }
 
 // get interns
 useEffect(() => {
-  axios.get('http://localhost:4000/getIntern')
+  axios.get('http://localhost:5000/getIntern')
   .then((res) => {
     const { data } = res
-    console.log(data, 'full')
     setFulldata(data)
+    const sorted = fullData.sort((a, b) => +new Date(a.date) - +new Date(b.date))
   })
   .catch((err) => {
     console.log('err', err )
   })
-}, [])
+}, [fullData])
 
 const onSendAirtime = () => {
   axios.post('https://sandbox.wallets.africa/bills/airtime/purchase', data, {
@@ -89,20 +127,71 @@ const onSendAirtime = () => {
     setError(true)
   })
 }
- 
+
+const onSendBulk = () => {
+  for(let i = 0; i < checks.length; i++) {
+    axios.post('https://sandbox.wallets.africa/bills/airtime/purchase', data[i], {
+      headers: {
+        mode: 'no-cors',
+        'Authorization': bearer,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then((res) => {
+      const { data } = res;
+      console.log(res)
+      setSucces(true)
+    })
+    .catch((err) => {
+      console.log(err)
+      setError(true)
+    })
+  }
+}
+
+const onDelete = () => {
+for (let i = 0; i < checks.length; i++) {
+  axios.delete(`http://localhost:5000/removeInterns/${id[i]}`)
+  .then((res) => {
+   const { data } = res
+   console.log(data)
+ })
+ .catch((err) => {
+   console.log('err', err )
+ })
+}
+}
+
+ const onDeleteAll = () => {
+   axios.delete('http://localhost:5000/removeAllInterns')
+   .then((res) => {
+    const { data } = res
+    console.log(data)
+  })
+  .catch((err) => {
+    console.log('err', err )
+  })
+ }
 
   return (
     <div className="App">
-    <nav id="idea" className="navbar navbar-expand-lg fixed-top">
+    <nav id="idea" className="navbar navbar-expand-lg">
       <div className="container">
           <div className="navbar-header">
               <img src={logs} alt='logo' className='logo'/>
           </div>
       </div> 
     </nav>
+    <h2 className='pt-5'>Purchasing of Airtime Made Easy</h2>
     
-      <button className="btn button" onClick={openModal} >Add Intern</button>
+    <div id='button'>
+
+    <button className="btn button my-5 mx-3" onClick={openModal} >Add Intern</button>
+    <button className="btn button my-5 mx-3" onClick={onDelete} >Remove Interns</button>
+    <button className="btn button my-5 mx-3" onClick={onDeleteAll} >Remove All</button>
+    <button className="btn button my-5 mx-3" onClick={onSendBulk} >Send Bulk</button>
  
+    </div>
       <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}
@@ -112,7 +201,10 @@ const onSendAirtime = () => {
       >
         <form onSubmit={onFormSubmit}>
           <div className="form-group">
-            <input type='text' className="form-control" value={name} onChange={(e) => onChangeHandler(e, setName)} placeholder="Intern Name"/>
+            <input type='text' className="form-control" value={name} onChange={(e) => onChangeHandler(e, setName)} placeholder="Intern's Name"/>
+          </div>
+          <div className="form-group">
+            <input type='text' className="form-control" value={track} onChange={(e) => onChangeHandler(e, setTrack)} placeholder="Intern's Track" />
           </div>
           <div className="form-group">
             <input type='text' className="form-control" value={provider} onChange={(e) => onChangeHandler(e, setProvider)} placeholder="Network Provider"/>
@@ -123,35 +215,38 @@ const onSendAirtime = () => {
           <div className="form-group">
             <input type='text' className="form-control" value={amount} onChange={(e) => onChangeHandler(e, setAmount)} placeholder="Amount" />
           </div>
-            <button className='btn button text-center'>Save</button>
+            <button className='btn btn-block button text-center'>Send</button>
         </form>
 
-      <button onClick={closeModal} className="btn button text-center my-3" >Close</button>
+      <button onClick={closeModal} className="btn btn-block button text-center my-3" >Close</button>
 
       </Modal>
 
-      
-    {fullData.map(({name, number, provider, amount}) => (
-      <div className='row'>
-        <div classname='col-md-3'>
-          <p>{name}</p>
+    {fullData.map(({name, number, provider, amount, _id}) => (
+      <div key={_id}>
+        <div className='row'>
+          <div className='col-1'>
+            <input type="checkbox"  autocomplete="off"/>
+          </div>
+          <div className='col-3'>
+            <p>{name}</p>
+          </div>
+          <div className='col-2'>
+            <p>{number}</p>
+          </div>
+          <div className='col-3'>
+            <p>Frontend</p>
+          </div>
+          <div className="col-3">
+            <button className='btn button' onClick={openModal} >Send Airtime</button>
+          </div>
         </div>
-        <div classname='col-md-3'>
-          <p>{number}</p>
-        </div>
-        <div classname='col-md-3'>
-          <p>Frontend</p>
-        </div>
-        <div className='col-md-3'>
-          <button className='btn button' onClick={openModal}>Edit Intern</button>
-        </div>
+        <hr/>
       </div>
-      <hr/>
-      ))}
-    </div>
+    ))}
+  </div>
   );
 }
 
 export default App;
 
-// <button className='btn button' onClick={onSendAirtime}>Send</button>

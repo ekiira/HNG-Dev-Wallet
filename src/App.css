@@ -1,7 +1,7 @@
 .App {
   text-align: center;
   width: 60%;
-  margin: 14% auto;
+  margin: 0 auto;
 }
 .Modal {
   background: white;
@@ -12,6 +12,7 @@
   overflow-y: auto;
   position: relative;
   padding: 5%;
+  outline: none;
 } 
 
 .Overlay {
@@ -28,7 +29,7 @@
 }
 .logo {
   justify-content: center;
-  width: 30%;
+  width: 50%;
 }
 
 .navbar-header {
@@ -36,11 +37,28 @@
 }
 
 .button {
-  background: #00AEFF;
+  border: 1px #00AEFF solid ;
+  background: white;
+  outline: none;
+}
+
+button:hover {
+  background-color: #00AEFF;
+  border: none;
+}
+
+button:focus {
+  background-color: #00AEFF;
+  border: none;
+  outline: none;
 }
 
 .sub-table {
   justify-content: space-around;
   display: flex;
+}
+
+#button {
+
 }
 
