@@ -10,6 +10,7 @@ dotenv.config();
 
 const publics = process.env.REACT_APP_API_PUBLIC_KEY;
 const secret = process.env.REACT_APP_API_SECOND_KEY;
+
 Modal.setAppElement('#root');
 
 const App = () => {
