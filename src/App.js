@@ -62,6 +62,7 @@ const App = () => {
 
   // add intern / sent intern airtime
   const onFormSubmit =  () => {
+    alert('yes')
      axios.post('https://hng-airtime-dev-server.herokuapp.com/addIntern', data1)
       .then((res) => {
         console.log(res, 'yes');
@@ -209,7 +210,7 @@ const App = () => {
           <div className="form-group">
             <input type="text" className="form-control" value={amount} onChange={(e) => onChangeHandler(e, setAmount)} placeholder="Amount" />
           </div>
-          <button type="button" className="btn btn-block button text-center">Send</button>
+          <button type="button" onClick={onFormSubmit} className="btn btn-block button text-center">Send</button>
         </form>
 
         <button type="button" onClick={closeModal} className="btn btn-block button text-center my-3">Close</button>
