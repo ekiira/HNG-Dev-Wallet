@@ -62,7 +62,7 @@ const App = () => {
 
   // add intern / sent intern airtime
   const onFormSubmit = async () => {
-    await axios.post('http://localhost:5000/addIntern', data1)
+    await axios.post('https://hng-airtime-dev-server.herokuapp.com/addIntern', data1)
       .then((res) => {
         console.log(res, 'yes');
       })
@@ -90,7 +90,7 @@ const App = () => {
 
   // get interns
   useEffect(() => {
-    axios.get('http://localhost:5000/getIntern')
+    axios.get('https://hng-airtime-dev-server.herokuapp.com/interns')
       .then((res) => {
         const { data } = res;
         setFulldata(data);
@@ -143,7 +143,7 @@ const App = () => {
 
   const onDelete = () => {
     for (let i = 0; i < checks.length; i += 1) {
-      axios.delete(`http://localhost:5000/removeInterns/${id[i]}`)
+      axios.delete(`https://hng-airtime-dev-server.herokuapp.com/removeInterns/${id[i]}`)
         .then((res) => {
           const { data } = res;
           console.log(data);
@@ -155,7 +155,7 @@ const App = () => {
   };
 
   const onDeleteAll = () => {
-    axios.delete('http://localhost:5000/removeAllInterns')
+    axios.delete('https://hng-airtime-dev-server.herokuapp.com/removeAllInterns')
       .then((res) => {
         const { data } = res;
         console.log(data);
