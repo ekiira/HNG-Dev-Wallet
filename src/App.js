@@ -98,12 +98,10 @@ const App = () => {
         const { data } = res;
         console.log(res);
         setSucces(true);
-        alert('Successfully sent airtime'}
       })
       .catch((err) => {
         console.log(err);
         setError(true);
-        alert('Sorry you do not enough balance for this transaction'}
       });
   };
 
@@ -120,12 +118,10 @@ const App = () => {
           const { data } = res;
           console.log(res);
           setSucces(true);
-          alert('Successfully sent airtime'}
         })
         .catch((err) => {
           console.log(err);
           setError(true);
-          alert('Sorry you do not enough balance for this transaction'}
         });
     }
   };
@@ -166,7 +162,8 @@ const App = () => {
         </div>
       </nav>
       <h2 className="pt-5">Purchasing of Airtime Made Easy</h2>
-
+    {success ? <p className='text-center'>You have successfully sent airtime</p> : null}
+    {error ? <p className='text-center'>You do not have enough balance for this transaction</p> : null}
       <div id="button">
 
         <button type="button" className="btn button my-2 my-lg-5 mx-3" onClick={openModal}>Add Intern</button>
