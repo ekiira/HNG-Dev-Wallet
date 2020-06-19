@@ -38,7 +38,7 @@ const App = () => {
   // data required for the wallet api
   const data2 = {
     Code: provider,
-    Amount: amount,
+    Amount: amount.toLowerCase(),
     PhoneNumber: number,
     SecretKey: '',
   };
@@ -99,7 +99,7 @@ const App = () => {
       .catch((err) => {
         console.log('err', err);
       });
-  }, [fullData]);
+  }, []);
 
   const onSendAirtime = () => {
     axios.post('https://sandbox.wallets.africa/bills/airtime/purchase', data, {
