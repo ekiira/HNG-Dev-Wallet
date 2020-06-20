@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
-import dotenv from 'dotenv';
 import './App.css';
 import logs from './assets/hng_logo-min.png';
 import edit from './assets/edit-alt-regular-24.png'
@@ -9,10 +8,6 @@ import del from './assets/trash-regular-24.png'
 import check from './assets/check-regular-24.png'
 import cancel from './assets/x-regular-24.png'
 
-dotenv.config();
-
-const publics = process.env.REACT_APP_API_PUBLIC_KEYS;
-const secret = process.env.REACT_APP_API_SECOND_KEYS;
 
 Modal.setAppElement('#root');
 
@@ -86,7 +81,6 @@ const App = () => {
 
   // get interns
   useEffect(() => {
-    console.log('getting interns');
     axios.get('https://hng-airtime-dev-server.herokuapp.com/interns')
       .then((res) => {
         const { data } = res;
@@ -96,15 +90,13 @@ const App = () => {
       .catch((err) => {
         console.log('err', err);
       });
-  }, [fullData]);
+  }, []);
 
   const onSendAirtime = (b, c, d) => {
       const data2 = {
         Code: c.toLowerCase(),
         Amount: d,
         PhoneNumber: b,
-        SecretKey: secret,
-        bearer: `Bearer ${publics}`
     };
      console.log('got here')
     
