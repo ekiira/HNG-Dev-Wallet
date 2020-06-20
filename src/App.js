@@ -8,8 +8,10 @@ import logs from './hng_logo-min.png';
 
 dotenv.config();
 
-const publics = process.env.REACT_APP_API_PUBLIC_KEY;
-const secret = process.env.REACT_APP_API_SECOND_KEY;
+const publics = process.env.REACT_APP_API_PUBLIC_KEYS;
+const secret = process.env.REACT_APP_API_SECOND_KEYS;
+
+
 
 Modal.setAppElement('#root');
 
@@ -20,13 +22,13 @@ const App = () => {
   const [amount, setAmount] = useState('');
   const [track, setTrack] = useState('');
   const [fullData, setFulldata] = useState([]);
-  const [select, onSelect] = useState([]);
-  const [check, setCheck] = useState(false);
+
   const [success, setSucces] = useState(false);
   const [error, setError] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const checks = '';
   const id = '';
+
   // Data required for the backend
   const data1 = {
     name,
@@ -54,10 +56,7 @@ const App = () => {
   // add intern / sent intern airtime
   const onFormSubmit = () => { 
    axios.post('https://hng-airtime-dev-server.herokuapp.com/addIntern', data1)
-      .then((res) => {
-        console.log(res, 'yes');
-         
-      })
+      .then((res) => (res))
       .catch((err) => {
         console.log(err,'no');
       });
@@ -76,34 +75,28 @@ const App = () => {
       });
   }, [fullData]);
 
-
   const onSendAirtime = (b, c, d) => {
-    // data required for the wallet api
       const data2 = {
         Code: c.toLowerCase(),
         Amount: d,
         PhoneNumber: b,
         SecretKey: secret,
+        bearer: `Bearer ${publics}`
     };
-    const data = JSON.stringify(data2);
-    const bearer = `Bearer ${publics}`;
-   axios.post('https://api.wallets.africa/bills/airtime/purchase', data, {
+  
+    axios.post('https://hng-airtime-dev-server.herokuapp.com/wallet-api', data2, {
       headers: {
-        // mode: 'no-cors',
-        Authorization: bearer,
         'Content-Type': 'application/json',
-        // "Access-Control-Allow-Origin": "*",
-        "crossorigin":true
       },
     })
       .then((res) => {
         const { data } = res;
-        console.log(res);
+        console.log(res.data);
         setSucces(true);
+        alert(data.message)
       })
       .catch((err) => {
-        console.log(err)
-        console.log(err.Message);
+        console.log(err);
         setError(true);
       });
   }; 
@@ -163,6 +156,19 @@ const App = () => {
       });
   };
 
+  // const onList = (a, b, c, d) => {
+  //   const data = {
+  //     a, b, c, d
+  //   }
+  //   if(check) {
+  //     setCheck(false)
+  //   } else if (!check){
+  //     setCheck(true)
+  //     // setChecked([...checked, data])
+  //     console.log(a, b, c, d, 'aa')
+  //   }
+  // }
+
   return (
     <div className="App">
       <nav id="idea" className="navbar navbar-expand-lg">
@@ -175,14 +181,14 @@ const App = () => {
       <h2 className="pt-5">Purchasing of Airtime Made Easy</h2>
     {success ? <p className='text-center'>You have successfully sent airtime</p> : null}
     {error ? <p className='text-center'>You do not have enough balance for this transaction</p> : null}
-      <div id="button" className='row my-3'>
 
+      <div id="button" className='row my-3 container'>
         <button type="button" className="btn col-6 col-md-3 button my-2 my-lg-5" onClick={openModal}>Add Intern</button>
         <button type="button" className="btn col-6 col-md-3 button my-2 my-lg-5" onClick={onDelete}>Remove Interns</button>
         <button type="button" className="btn col-6 col-md-3 button my-2 my-lg-5" onClick={onDeleteAll}>Remove All</button>
         <button type="button" className="btn col-6 col-md-3 button my-2 my-lg-5">Send Bulk</button>
-
       </div>
+
       <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}
@@ -227,7 +233,7 @@ const App = () => {
   <tbody>
   {fullData.map(({name, number, provider, amount, _id, track}) => (
     <tr key={_id}>
-    <td><input type="checkbox" autoComplete="off" /></td>
+    <td><input type="checkbox" autoComplete="off"/></td>
     <td>{name}</td>
     <td>{track}</td>
     <td>{number}</td>
