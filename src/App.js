@@ -73,7 +73,7 @@ const App = () => {
       .catch((err) => {
         console.log('err', err);
       });
-  }, [fullData]);
+  }, []);
 
   const onSendAirtime = (b, c, d) => {
       const data2 = {
