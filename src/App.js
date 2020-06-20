@@ -121,8 +121,8 @@ const App = () => {
         alert(data.message)
       })
       .catch((err) => {
-        console.log('error--->>>', error)
-        throw error
+        console.log('error--->>>', err)
+        throw err
       });
   }; 
 
