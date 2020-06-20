@@ -87,6 +87,7 @@ const App = () => {
     axios.post('https://hng-airtime-dev-server.herokuapp.com/wallet-api', data2, {
       headers: {
         'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       },
     })
       .then((res) => {
