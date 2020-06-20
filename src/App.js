@@ -86,6 +86,7 @@ const App = () => {
 
   // get interns
   useEffect(() => {
+    console.log('getting interns');
     axios.get('https://hng-airtime-dev-server.herokuapp.com/interns')
       .then((res) => {
         const { data } = res;
@@ -105,18 +106,24 @@ const App = () => {
         SecretKey: secret,
         bearer: `Bearer ${publics}`
     };
+     console.log('got here')
     
     axios.post('https://hng-airtime-dev-server.herokuapp.com/wallet-api', data2, {
+      // axios.post('http://localhost:5000/wallet-api', data2, {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
     })
       .then((res) => {
+        console.log('response in then--->>', res)
         const { data } = res;
         alert(data.message)
       })
-      .catch((err) => err);
+      .catch((err) => {
+        console.log('error--->>>', error)
+        throw error
+      });
   }; 
 
   // const onSendBulk = (b, c, d) => {
