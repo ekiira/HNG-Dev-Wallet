@@ -28,7 +28,7 @@ const App = () => {
   const [error, setError] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editedAmount, setEditedAmount] = useState('')
+  const [editedId, setEditedId] = useState('')
   
 
   // Data required for the backend
@@ -47,7 +47,7 @@ const App = () => {
 
   const openEditModal = (a) => {
     setIsEditOpen(true);
-    setEditedAmount(a)
+    setEditedId(a)
   };
 
   const closeModal = () => {
@@ -76,7 +76,7 @@ const App = () => {
   };
 
   const onFormEditSubmit = () => { 
-    axios.post(`http://localhost:5000/edit/intern/${editedAmount}`, data1)
+    axios.post(`https://hng-airtime-dev-server.herokuapp.com/edit/intern/${editedId}`, data1)
        .then((res) => (res))
        .catch((err) => {
          console.log(err,'no');
